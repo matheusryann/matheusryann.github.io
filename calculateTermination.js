@@ -19,32 +19,38 @@ function calcularRescisao() {
 
     const tempoTrabalhado = (fim.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24 * 365.25);
     const anosTrabalhados = Math.floor(tempoTrabalhado);
+    const mesesTrabalhadosNoAno = Math.floor((tempoTrabalhado % 1) * 12);
 
     const diasTrabalhados = fim.getDate();
     const valorRemanescenteSalario = (salario / 30) * diasTrabalhados;
 
-    let valorFeriasAcumuladas = 0;
+    let valorFeriasVencidas = 0;
     let valorFeriasProporcionais = 0;
-    let valorFeriasProporcionaisAcrescidas = 0;
 
     if (feriasRecebidas === 'N') {
-        if (anosTrabalhados >= 2) {
-            valorFeriasAcumuladas = (salario / 3) * 2; // pagamento em dobro após dois anos
-        } else {
-            valorFeriasAcumuladas = salario / 3;
-        }
+        // Férias vencidas
+        valorFeriasVencidas = salario * anosTrabalhados;
+        const valorFeriasVencidasAcrescidas = valorFeriasVencidas / 3;
+
+        // Férias proporcionais
+        valorFeriasProporcionais = (salario / 12) * mesesTrabalhadosNoAno;
+        const valorFeriasProporcionaisAcrescidas = valorFeriasProporcionais / 3;
+
+        valorFeriasVencidas += valorFeriasVencidasAcrescidas;
+        valorFeriasProporcionais += valorFeriasProporcionaisAcrescidas;
+    } else {
+        // Apenas férias proporcionais
+        valorFeriasProporcionais = (salario / 12) * mesesTrabalhadosNoAno;
+        const valorFeriasProporcionaisAcrescidas = valorFeriasProporcionais / 3;
+        valorFeriasProporcionais += valorFeriasProporcionaisAcrescidas;
     }
 
-    const mesesTrabalhadosNoAno = (tempoTrabalhado % 1) * 12;
-    valorFeriasProporcionais = (salario / 12) * mesesTrabalhadosNoAno;
-    valorFeriasProporcionaisAcrescidas = valorFeriasProporcionais / 3;
-
-    let valorDecimoTerceiro = 0;
+    let valorDecimoTerceiroAnual = 0;
     let valorDecimoTerceiroProporcional = 0;
 
     if (decimoTerceiroRecebido === 'N') {
-        valorDecimoTerceiro = (salario / 12) * mesesTrabalhadosNoAno;
-        valorDecimoTerceiroProporcional = valorDecimoTerceiro;
+        valorDecimoTerceiroAnual = salario * anosTrabalhados;
+        valorDecimoTerceiroProporcional = (salario / 12) * mesesTrabalhadosNoAno;
     } else {
         valorDecimoTerceiroProporcional = (salario / 12) * mesesTrabalhadosNoAno;
     }
@@ -52,20 +58,15 @@ function calcularRescisao() {
     const diasAvisoPrevio = 30 + (anosTrabalhados * 3);
     const valorAvisoPrevio = (salario / 30) * diasAvisoPrevio;
 
-    const valorFGTS = salario * 0.08 * tempoTrabalhado;
+    const valorFGTS = salario * 0.08 * (anosTrabalhados * 12 + mesesTrabalhadosNoAno);
     const multaFGTS = valorFGTS * 0.4;
 
-    const totalRescisao = valorRemanescenteSalario + valorFeriasAcumuladas + valorFeriasProporcionais + valorFeriasProporcionaisAcrescidas + valorDecimoTerceiro + valorAvisoPrevio + multaFGTS;
+    const totalRescisao = valorRemanescenteSalario + valorFeriasVencidas + valorFeriasProporcionais + valorDecimoTerceiroAnual + valorDecimoTerceiroProporcional + valorAvisoPrevio + multaFGTS;
 
-    const inssSalario = valorRemanescenteSalario * 0.08;
-    const inssDecimoTerceiro = valorDecimoTerceiroProporcional * 0.08;
-    const inssAvisoPrevio = valorAvisoPrevio * 0.08;
-
-    const totalDescontos = inssSalario + inssDecimoTerceiro + inssAvisoPrevio;
     const totalVerbas = totalRescisao;
 
     const resultadoHTML = `
-        <p>O valor líquido aproximado da sua rescisão é de: <strong>R$${(totalVerbas - totalDescontos).toFixed(2)}</strong></p>
+        <p>O valor líquido aproximado da sua rescisão é de: <strong>R$${totalVerbas.toFixed(2)}</strong></p>
         <p>Confira o Detalhamento do seu cálculo:</p>
         <div class="table-responsive" id="get-scroll">
             <table class="table tb-values">
@@ -85,37 +86,27 @@ function calcularRescisao() {
                         <td class="empty-cell">-</td>
                     </tr>
                     <tr>
-                        <td>INSS Saldo Salário</td>
-                        <td>8%</                        <td class="empty-cell">-</td>
-                        <td data-calc="negative">R$${inssSalario.toFixed(2)}</td>
+                        <td>Décimo Terceiro Salário</td>
+                        <td>${anosTrabalhados} anos</td>
+                        <td data-calc="positive">R$${valorDecimoTerceiroAnual.toFixed(2)}</td>
+                        <td class="empty-cell">-</td>
                     </tr>
                     <tr>
-                        <td>13º Proporcional</td>
-                        <td>${mesesTrabalhadosNoAno.toFixed(2)}</td>
+                        <td>Décimo Terceiro Salário Proporcional</td>
+                        <td>${mesesTrabalhadosNoAno} meses</td>
                         <td data-calc="positive">R$${valorDecimoTerceiroProporcional.toFixed(2)}</td>
                         <td class="empty-cell">-</td>
                     </tr>
                     <tr>
-                        <td>INSS 13º Proporcional</td>
-                        <td>8%</                        <td class="empty-cell">-</td>
-                        <td data-calc="negative">R$${inssDecimoTerceiro.toFixed(2)}</td>
-                    </tr>
-                    <tr>
-                        <td>Férias não Recebidas</td>
+                        <td>Férias Vencidas + 1/3</td>
                         <td>-</td>
-                        <td data-calc="positive">R$${valorFeriasAcumuladas.toFixed(2)}</td>
+                        <td data-calc="positive">R$${valorFeriasVencidas.toFixed(2)}</td>
                         <td class="empty-cell">-</td>
                     </tr>
                     <tr>
-                        <td>Férias Proporcionais</td>
+                        <td>Férias Proporcionais + 1/3</td>
                         <td>-</td>
                         <td data-calc="positive">R$${valorFeriasProporcionais.toFixed(2)}</td>
-                        <td class="empty-cell">-</td>
-                    </tr>
-                    <tr>
-                        <td>1/3 Férias Proporcionais</td>
-                        <td>-</td>
-                        <td data-calc="positive">R$${valorFeriasProporcionaisAcrescidas.toFixed(2)}</td>
                         <td class="empty-cell">-</td>
                     </tr>
                     <tr>
@@ -125,16 +116,17 @@ function calcularRescisao() {
                         <td class="empty-cell">-</td>
                     </tr>
                     <tr>
-                        <td>INSS Aviso Prévio</td>
-                        <td>8%</                        <td class="empty-cell">-</td>
-                        <td data-calc="negative">R$${inssAvisoPrevio.toFixed(2)}</td>
+                        <td>Multa FGTS</td>
+                        <td>-</td>
+                        <td data-calc="positive">R$${multaFGTS.toFixed(2)}</td>
+                        <td class="empty-cell">-</td>
                     </tr>
                 </tbody>
                 <tr class="tb-total">
                     <td class="tb-evento">Total:</td>
                     <td class="tb-ref"></td>
                     <td class="calc-total-positive">R$${totalVerbas.toFixed(2)}</td>
-                    <td class="calc-total-negative">R$${totalDescontos.toFixed(2)}</td>
+                    <td class="empty-cell">-</td>
                 </tr>
             </table>
         </div>
@@ -143,3 +135,4 @@ function calcularRescisao() {
     localStorage.setItem('resultadoHTML', resultadoHTML);
     window.location.href = `resultado.html`;
 }
+
