@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 5;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.calculator-box {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px;
+}
+
+.calc-title {
+    color: #27ae60;
+    text-align: center;
+}
+
+.calculator .form-group {
+    margin-bottom: 15px;
+}
+
+.calculator .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.calculator .form-group input,
+.calculator .form-group select {
+    width: 95%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.calc-button {
+    background-color: #27ae60;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 5px;
+    font-size: 18px;
+}
+
+
+.results {
+    margin-top: 20px;
+}
+
+.result {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.result p {
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.table .th-evento {
+    width: 50%;
+}
+
+.table .th-ref, .table .th-verba, .table .th-desconto {
+    width: 16.66%;
+}
+
+.table .tb-total {
+    font-weight: bold;
+}
+
+.table .tb-evento, .table .tb-ref, .table .tb-verba, .table .tb-desconto {
+    padding: 10px;
+}
+
+.calc-total-positive {
+    color: #27ae60;
+}
+
+.calc-total-negative {
+    color: #e74c3c;
+}
