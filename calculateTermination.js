@@ -61,7 +61,7 @@ function calcularRescisao() {
     const valorFGTS = salario * 0.08 * (anosTrabalhados * 12 + mesesTrabalhadosNoAno);
     const multaFGTS = valorFGTS * 0.4;
 
-    const totalRescisao = valorRemanescenteSalario + valorFeriasVencidas + valorFeriasProporcionais + valorDecimoTerceiroAnual + valorDecimoTerceiroProporcional + valorAvisoPrevio + multaFGTS;
+    const totalRescisao = valorRemanescenteSalario + valorFeriasVencidas + valorFeriasProporcionais + valorDecimoTerceiroAnual + valorDecimoTerceiroProporcional + valorAvisoPrevio + valorFGTS + multaFGTS;
 
     const totalVerbas = totalRescisao;
 
@@ -75,7 +75,6 @@ function calcularRescisao() {
                         <th class="th-evento">Evento</th>
                         <th class="th-ref">Ref.</th>
                         <th class="th-verba">Verba</th>
-                        <th class="th-desconto">Desconto</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -83,50 +82,47 @@ function calcularRescisao() {
                         <td class="tb-evento">Saldo Salário</td>
                         <td>${diasTrabalhados}</td>
                         <td data-calc="positive">R$${valorRemanescenteSalario.toFixed(2)}</td>
-                        <td class="empty-cell">-</td>
                     </tr>
                     <tr>
-                        <td>Décimo Terceiro Salário</td>
+                        <td>Décimo Terceiro Salário Anual</td>
                         <td>${anosTrabalhados} anos</td>
-                        <td data-calc="positive">R$${valorDecimoTerceiroAnual.toFixed(2)}</td>
-                        <td class="empty-cell">-</td>
+                        <td data-ccalc="positive">R$${valorDecimoTerceiroAnual.toFixed(2)}</td>
                     </tr>
                     <tr>
                         <td>Décimo Terceiro Salário Proporcional</td>
                         <td>${mesesTrabalhadosNoAno} meses</td>
                         <td data-calc="positive">R$${valorDecimoTerceiroProporcional.toFixed(2)}</td>
-                        <td class="empty-cell">-</td>
                     </tr>
                     <tr>
                         <td>Férias Vencidas + 1/3</td>
                         <td>-</td>
                         <td data-calc="positive">R$${valorFeriasVencidas.toFixed(2)}</td>
-                        <td class="empty-cell">-</td>
                     </tr>
                     <tr>
                         <td>Férias Proporcionais + 1/3</td>
                         <td>-</td>
                         <td data-calc="positive">R$${valorFeriasProporcionais.toFixed(2)}</td>
-                        <td class="empty-cell">-</td>
                     </tr>
                     <tr>
                         <td>Aviso Prévio</td>
                         <td>${diasAvisoPrevio}</td>
                         <td data-calc="positive">R$${valorAvisoPrevio.toFixed(2)}</td>
-                        <td class="empty-cell">-</td>
+                    </tr>
+                    <tr>
+                        <td>FGTS</td>
+                        <td>-</td>
+                        <td data-calc="positive">R$${valorFGTS.toFixed(2)}</td>
                     </tr>
                     <tr>
                         <td>Multa FGTS</td>
                         <td>-</td>
                         <td data-calc="positive">R$${multaFGTS.toFixed(2)}</td>
-                        <td class="empty-cell">-</td>
                     </tr>
                 </tbody>
                 <tr class="tb-total">
                     <td class="tb-evento">Total:</td>
                     <td class="tb-ref"></td>
                     <td class="calc-total-positive">R$${totalVerbas.toFixed(2)}</td>
-                    <td class="empty-cell">-</td>
                 </tr>
             </table>
         </div>
@@ -135,4 +131,3 @@ function calcularRescisao() {
     localStorage.setItem('resultadoHTML', resultadoHTML);
     window.location.href = `resultado.html`;
 }
-
